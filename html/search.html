@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>search</title>
+    <style>
+        body {
+            background: #000;
+            color: #fff;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .box {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .boxS {
+            width: 40%;
+            margin: 50px;
+            background: #191313;
+            border: 1px solid #585353;
+            border-radius: 10px;
+        }
+
+        .row {
+            padding: 20px;
+        }
+
+        .row span {
+            font-weight: bold;
+        }
+
+        .title {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+        }
+
+        .title a {
+            color: #d84141;
+            font-size: 22px;
+        }
+        th a {
+            color: #d84141;
+            font-size: 22px;
+        }
+
+        button {
+            background-color: #d84141;
+            border-radius: 4px;
+        }
+        table  {
+            width: 100%;
+        }
+        tbody th{
+            width: 16%;
+            border: 1px solid #d841414a;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div class="title">
+            <a href="home.html">home</a>
+            <a href="search.html">search</a>
+            <a href="fundraiser.html">details</a>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div style="display: flex;justify-content: center;">
+                    <label for="CATEGORYID">CATEGORYID： </label>
+                    <select name="CATEGORYID" style="width: 200px;" class="form-control" id="CATEGORYID">
+                    </select>
+                    <label for="FUNDRAISERID">FUNDRAISERID： </label>
+                    <input type="text" class="form-control" id="FUNDRAISERID" name="FUNDRAISERID" value="" />
+
+                </div>
+                <div style="display: flex;justify-content: center;">
+                    <button type="button" onclick="Query()" style="margin: 30px;">Query</button>
+                    <button type="button" onclick="Clear()" style="margin: 30px;">Clear</button>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>FUNDRAISERID</th>
+                                <th>ORGANIZER</th>
+                                <th>CAPTION</th>
+                                <th>TARGET_FUNDING</th>
+                                <th>CURRENT_FUNDING</th>
+                                <th>CITY</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        function ajax(obj) {
+            let type = obj.type;
+            let url = obj.url;
+            let callback = obj.callback;
+            let xhr = new XMLHttpRequest();
+            xhr.open(type, url);
+            xhr.send();
+            xhr.onreadystatechange = function () {
+                callback(JSON.parse(xhr.responseText));
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        function init() {
+            console.log('init');
+            ajax({
+                url: "http://localhost:4008/List",
+                type: "get",
+                callback: function (data) {
+                    console.log(data);
+                    if (data.length) {
+                        let tbodyinnerHTML = ''
+                        data.map((item) => {
+                            tbodyinnerHTML += `<option value=${item.CATEGORYID}>${item.NAME}</option>`
+                        })
+                        document.getElementById("CATEGORYID").innerHTML = tbodyinnerHTML;
+                    }
+                }
+            });
+        };
+        init()
+        function Query() {
+            let FUNDRAISERID = document.getElementById('FUNDRAISERID').value
+            let CATEGORYID = document.getElementById('CATEGORYID').value
+            ajax({
+                url: `http://localhost:4008/getOneFundraiser?FUNDRAISERID=${FUNDRAISERID}&CATEGORYID=${CATEGORYID}`,
+                type: "get",
+                callback: function (data) {
+                    console.log(data);
+                    let tbodyinnerHTML = ''
+                    data.map((item) => {
+                        tbodyinnerHTML += `<tr>
+                                <th><a href="fundraiser.html?${item.FUNDRAISERID}">${item.FUNDRAISERID}</a></th>
+                                <th>${item.ORGANIZER}</th>
+                                <th>${item.CAPTION}</th>
+                                <th>${item.TARGET_FUNDING}</th>
+                                <th>${item.CURRENT_FUNDING}</th>
+                                <th>${item.CITY}</th>
+                            </tr>`
+                    })
+                    document.getElementById("tbody").innerHTML = tbodyinnerHTML;
+
+                }
+            });
+        };
+        function Clear () {
+            document.getElementById('FUNDRAISERID').value = ''
+            document.getElementById('CATEGORYID').value = ''
+        };
+
+    </script>
+</body>
+
+</html>

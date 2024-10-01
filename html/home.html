@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>home</title>
+    <style>
+        body {
+            background: #000;
+            color: #fff;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .box {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .boxS {
+            width: 40%;
+            margin: 50px;
+            background: #191313;
+            border: 1px solid #585353;
+            border-radius: 10px;
+        }
+
+        .row {
+            padding: 20px;
+        }
+
+        .row span {
+            font-weight: bold;
+        }
+
+        .title {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+        }
+        .title a{
+            color: #d84141;
+            font-size: 22px;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div class="title">
+            <a href="home.html">home</a>
+            <a href="search.html">search</a>
+            <a href="fundraiser.html">details</a>
+        </div>
+        <div class="box" id="box">
+            <div class="boxS">
+                <div class="row"><span>FUNDRAISERID</span></div>
+            </div>
+            <div class="boxS"></div>
+            <div class="boxS"></div>
+            <div class="boxS"></div>
+            <div class="boxS"></div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        function ajax(obj) {
+            let type = obj.type;
+            let url = obj.url;
+            let callback = obj.callback;
+            let xhr = new XMLHttpRequest();
+            xhr.open(type, url);
+            xhr.send();
+            xhr.onreadystatechange = function () {
+                callback(JSON.parse(xhr.responseText));
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        function init() {
+            console.log('init');
+            ajax({
+                url: "http://localhost:4008/getActiveFundraisers?active=Active",
+                type: "get",
+                callback: function (data) {
+                    console.log(data);
+                    if (data.length) {
+                        let tbodyinnerHTML = ''
+                        data.map((item) => {
+                            tbodyinnerHTML += `
+                            <div class="boxS">
+                                <div class="row"><span>FUNDRAISERID: </span>${item.FUNDRAISERID}</div>
+                                <div class="row"><span>ORGANIZER: </span>${item.ORGANIZER}</div>
+                                <div class="row"><span>CAPTION: </span>${item.CAPTION}</div>
+                                <div class="row"><span>TARGET_FUNDING: </span>${item.TARGET_FUNDING}</div>
+                                <div class="row"><span>CURRENT_FUNDING: </span>${item.CURRENT_FUNDING}</div>
+                                <div class="row"><span>CITY: </span>${item.CITY}</div>
+                                <div class="row"><span>ACTIVE: </span>${item.ACTIVE}</div>
+                                <div class="row"><span>CATEGORYID: </span>${item.CATEGORYID}</div>
+                            </div>
+                            `
+                        })
+                        document.getElementById("box").innerHTML = tbodyinnerHTML;
+                    }
+                }
+            });
+        };
+        init()
+    </script>
+</body>
+
+</html>
