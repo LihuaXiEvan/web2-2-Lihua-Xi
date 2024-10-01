@@ -2,13 +2,7 @@
 var app = require("express").Router();
 const DBPool = require('./crowdfunding_db.js')
 
-app.get('/getFundraisersList', (req, res) => {
-    let searchSql = 'SELECT * from `FUNDRAISER`'
-    DBPool.query(searchSql, [], (results) => {
-        let result = results.results
-        res.send(result);
-    })
-});
+
 app.get("/getActiveFundraisers", (req, res) => {
     let param = req.query
     let searchSql = 'SELECT * from `FUNDRAISER` WHERE ACTIVE = ?'
