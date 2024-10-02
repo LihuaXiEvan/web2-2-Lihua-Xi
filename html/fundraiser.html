@@ -119,19 +119,27 @@
     </div>
     </div>
     <script type="text/javascript">
+        //Define a function for sending AJAX requests
         function ajax(obj) {
+            //Retrieve the request type, URL, and callback function from the passed parameter object
             let type = obj.type;
             let url = obj.url;
             let callback = obj.callback;
+            //Create a new XMLHttpRequest object
             let xhr = new XMLHttpRequest();
+            //Configure request method and target URL
             xhr.open(type, url);
+            //Send request
             xhr.send();
+            //Set callback function to trigger when request is completed
             xhr.onreadystatechange = function () {
+                //Parse the JSON data returned by the server and pass it to the callback function
                 callback(JSON.parse(xhr.responseText));
             }
         }
     </script>
     <script type="text/javascript">
+        //Initialization function, used to handle operations during page loading
         function init() {
             console.log(location.search);
             let param = location.search ? location.search.split('?') : ''
@@ -139,11 +147,13 @@
                 return;
             }
             console.log('init');
+            //Using custom AJAX functions for HTTP requests
             ajax({
                 url: `http://localhost:4008/Details?FUNDRAISERID=${param[1]}`,
                 type: "get",
                 callback: function (data) {
                     console.log(data);
+                    //Fill the elements in the page with the returned data
                     document.getElementById("FUNDRAISERID").innerHTML = data[0].FUNDRAISERID;
                     document.getElementById("ORGANIZER").innerHTML = data[0].ORGANIZER;
                     document.getElementById("CAPTION").innerHTML = data[0].CAPTION;
@@ -157,6 +167,7 @@
                 }
             });
         };
+        //Call initialization function immediately after page loading
         init()
         document.getElementById("Donate").onclick = function () {
             alert('This feature is under contruction')
