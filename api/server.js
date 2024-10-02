@@ -1,6 +1,9 @@
+//Introduce the express module
 const express = require('express')
+//Create an Express application instance
 const app = express()
 
+//Middleware: Setting CORS headers
 app.all('*', function (req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-Headers", "X-Requested-With");
@@ -10,13 +13,18 @@ app.all('*', function (req, res, next) {
 	next();
 });
 
+//Using JSON middleware to parse request body
 app.use(express.json())
 
+//Introduce user related API routing
 let user = require('./api.js');
 app.use(user);
 
+//Export application instance
 module.exports = app
+
+//Set up ports and start the server
 const port =4008
 app.listen(port, () => {
-	console.log(`app is running at http://localhost:${port}`)
+	console.log(`app is running at http://localhost:${port}`)//Output operational information
 })
