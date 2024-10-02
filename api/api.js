@@ -48,6 +48,7 @@ app.get("/Details", (req, res) => {
         let result = results.results
         res.send(result);
     })
+});
 
 
 app.get("/List", (req, res) => {
