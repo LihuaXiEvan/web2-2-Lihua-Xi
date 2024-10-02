@@ -66,6 +66,7 @@
         </div>
     </div>
     <script type="text/javascript">
+        //AJAX Request Function
         function ajax(obj) {
             let type = obj.type;
             let url = obj.url;
@@ -73,15 +74,19 @@
             let xhr = new XMLHttpRequest();
             xhr.open(type, url);
             xhr.send();
+            //Triggered when the request status changes
             xhr.onreadystatechange = function () {
                 callback(JSON.parse(xhr.responseText));
             }
         }
     </script>
     <script type="text/javascript">
+        //Initialization function
         function init() {
             console.log('init');
+            //Initiate AJAX requests to obtain active fundraising projects
             ajax({
+                //Request URL
                 url: "http://localhost:4008/getActiveFundraisers?active=Active",
                 type: "get",
                 callback: function (data) {
@@ -102,11 +107,13 @@
                             </div>
                             `
                         })
+                        //Insert the constructed HTML content into a box container
                         document.getElementById("box").innerHTML = tbodyinnerHTML;
                     }
                 }
             });
         };
+        //Call initialization function
         init()
     </script>
 </body>
