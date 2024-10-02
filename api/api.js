@@ -41,6 +41,13 @@ app.get("/getOneFundraiser", (req, res) => {
     
 });
 
+app.get("/Details", (req, res) => {
+    let param = req.query
+    let searchSql = 'SELECT * from `FUNDRAISER` WHERE FUNDRAISERID = ?'
+    DBPool.query(searchSql, [param.FUNDRAISERID], (results) => {
+        let result = results.results
+        res.send(result);
+    })
 
 
 app.get("/List", (req, res) => {
@@ -50,6 +57,7 @@ app.get("/List", (req, res) => {
         res.send(result);
     })
 });
+
 
 
 module.exports = app;
