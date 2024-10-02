@@ -20,10 +20,27 @@ class DBPool {
 				if (err) {
 					throw err;
 				}
+				
+			});
+		});
+	}
+	query(sql, params, callBack) {
+		this.pool.getConnection((err, connection) => {
+			if (err) {
+				throw err;
+			}
+			connection.query(sql, params, (err, results, fields) => {
+				connection.release();
+				if (err) {
+					throw err;
+				}
 				callBack && callBack({ results, fields });
 			});
 		});
 	}
+
+
+
 }
 
 module.exports = new DBPool();
